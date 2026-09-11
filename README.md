@@ -4,7 +4,7 @@
 
 **Modern, Zero-Config SQLite to PostgreSQL & Supabase Exporter & Migrator.**
 
-[![CI](https://github.com/sqlite2pg/sqlite2pg/actions/workflows/ci.yml/badge.svg)](https://github.com/sqlite2pg/sqlite2pg/actions)
+[![CI](https://github.com/pushkarreddyy/sqlite2pg/actions/workflows/ci.yml/badge.svg)](https://github.com/pushkarreddyy/sqlite2pg/actions)
 [![npm version](https://img.shields.io/npm/v/sqlite2pg.svg?style=flat&color=339933)](https://www.npmjs.com/package/sqlite2pg)
 [![Node Version](https://img.shields.io/node/v/sqlite2pg.svg?style=flat)](https://nodejs.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
