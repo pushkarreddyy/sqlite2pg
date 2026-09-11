@@ -2,12 +2,10 @@
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.x     | :white_check_mark: |
+| Version | Supported |
+| ------- | --------- |
+| 1.x     | Yes       |
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within `sqlite2pg`, please do NOT open a public issue.
-
-Instead, please send an email to the maintainers or report via GitHub Security Advisory. We will respond promptly to investigate and resolve the issue.
+To report a security vulnerability, please open a private GitHub Security Advisory or contact the maintainers directly. Do not report security vulnerabilities through public GitHub issues.
