@@ -12,3 +12,6 @@ Thumbs.db
 coverage/
 .system_generated/
 scratch/
+GEMINI.md
+.agents/
+.agent/
