@@ -1,0 +1,46 @@
+{
+  "name": "sqlite2pg",
+  "version": "1.0.0",
+  "description": "Modern Zero-Config SQLite to PostgreSQL & Supabase Exporter and Migrator",
+  "bin": {
+    "sqlite2pg": "./bin/sqlite2pg.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "node --import tsx/esm tests/converter.test.ts",
+    "start": "tsx src/cli.ts"
+  },
+  "keywords": [
+    "sqlite",
+    "postgresql",
+    "postgres",
+    "supabase",
+    "neon",
+    "migration",
+    "converter",
+    "dump",
+    "database",
+    "libsql",
+    "turso"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "pg": "^8.13.1",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.log
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+!tests/fixtures/*.sample.sql
+.env
+.DS_Store
+Thumbs.db
+coverage/
+.system_generated/
+scratch/
