@@ -145,5 +145,5 @@ function printStats(stats: any) {
     `Tables: ${pc.bold(pc.green(stats.tableCount))} | Rows: ${pc.bold(pc.yellow(stats.rowCount))} | FKs: ${stats.foreignKeyCount} | Indexes: ${stats.indexCount} | Duration: ${stats.durationMs}ms`
   );
   console.log(pc.dim(`------------------------------------------------------------`));
-  console.log(pc.dim(`sqlite2pg by Pushkar Reddy (@pushkarreddyy) - Star on GitHub: https://github.com/pushkarreddyy/sqlite2pg\n`));
+  console.log(pc.dim(`sqlite2pg by @pushkarreddyy - Star on GitHub: https://github.com/pushkarreddyy/sqlite2pg\n`));
 }

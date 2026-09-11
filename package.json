@@ -35,7 +35,7 @@
     "sqlite-dump-postgres",
     "cli"
   ],
-  "author": "Pushkar Reddy <https://github.com/pushkarreddyy>",
+  "author": "pushkarreddyy <https://github.com/pushkarreddyy>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pushkarreddyy/sqlite2pg.git"
