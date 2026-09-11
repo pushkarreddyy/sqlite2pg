@@ -93,7 +93,8 @@ describe('sqlite2pg CLI End-to-End Tests', () => {
   });
 
   it('should run CLI --dry-run cleanly', () => {
-    const output = execSync(`node bin/sqlite2pg.js "${testDbPath}" --dry-run`, {
+    const nodeFlag = process.versions.node.startsWith('22.') ? '--experimental-sqlite ' : '';
+    const output = execSync(`node ${nodeFlag}bin/sqlite2pg.js "${testDbPath}" --dry-run`, {
       encoding: 'utf-8',
     });
     assert.ok(output.includes('sqlite2pg Schema Inspection'));
@@ -103,8 +104,9 @@ describe('sqlite2pg CLI End-to-End Tests', () => {
   });
 
   it('should run CLI and generate complete migration.sql for Supabase', () => {
+    const nodeFlag = process.versions.node.startsWith('22.') ? '--experimental-sqlite ' : '';
     const output = execSync(
-      `node bin/sqlite2pg.js "${testDbPath}" -t supabase -o "${outputSqlPath}"`,
+      `node ${nodeFlag}bin/sqlite2pg.js "${testDbPath}" -t supabase -o "${outputSqlPath}"`,
       { encoding: 'utf-8' }
     );
     assert.ok(output.includes('Migration SQL written to:'));

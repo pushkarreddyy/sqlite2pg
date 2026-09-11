@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "test": "tsx --test tests/*.test.ts",
+    "test": "node --experimental-sqlite --test --import tsx tests/converter.test.ts tests/cli.test.ts",
     "start": "tsx src/cli.ts"
   },
   "keywords": [
