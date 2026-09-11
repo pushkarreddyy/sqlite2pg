@@ -169,6 +169,17 @@ npx sqlite2pg ./app.db --identity -o migration.sql
 
 ---
 
+## 🔍 Common Search Queries Solved
+
+Developers frequently discover `sqlite2pg` when looking for answers to:
+- **"convert sqlite db to postgres sql"**: `sqlite2pg ./app.db -o migration.sql` converts your entire schema & data in one clean step.
+- **"sqlite dump compatible with postgresql"**: Unlike `sqlite3 .dump`, `sqlite2pg` produces 100% syntactically valid PostgreSQL statements without breaking on `AUTOINCREMENT`, `0/1` booleans, or unquoted identifiers.
+- **"migrate sqlite to supabase"**: Running `sqlite2pg ./app.db -o migration.sql --target supabase` automatically generates Row Level Security (RLS) and required Postgres extensions.
+- **"sqlite3 dump postgres syntax error"**: Fixes invalid sqlite PRAGMAs, binary blobs (`\x...::bytea`), timestamp formatting, and table insertion order.
+- **"pgloader alternative for Apple Silicon / M1 / M2 / M3"**: Fast, zero-config Node CLI with zero memory leaks, zero Lisp crashes, and no configuration file needed.
+
+---
+
 ## 🧪 Testing
 
 Run the automated test suite:
