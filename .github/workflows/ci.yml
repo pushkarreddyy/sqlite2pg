@@ -32,6 +32,4 @@ jobs:
         run: npm run build
 
       - name: Run Tests
-        env:
-          NODE_OPTIONS: "--experimental-sqlite"
         run: npm test
