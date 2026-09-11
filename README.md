@@ -192,6 +192,16 @@ npm test
 
 ---
 
+## Author & Attribution
+
+Created and maintained by **[Pushkar Reddy](https://github.com/pushkarreddyy)** ([@pushkarreddyy](https://github.com/pushkarreddyy)).
+
+If you use `sqlite2pg` in your projects, tutorials, or tooling, please consider giving the repository a star on GitHub:
+
+[![Star on GitHub](https://img.shields.io/github/stars/pushkarreddyy/sqlite2pg?style=social)](https://github.com/pushkarreddyy/sqlite2pg)
+
+---
+
 ## License
 
-MIT
+MIT © 2026 [Pushkar Reddy](https://github.com/pushkarreddyy)

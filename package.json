@@ -35,7 +35,15 @@
     "sqlite-dump-postgres",
     "cli"
   ],
-  "author": "",
+  "author": "Pushkar Reddy <https://github.com/pushkarreddyy>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pushkarreddyy/sqlite2pg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pushkarreddyy/sqlite2pg/issues"
+  },
+  "homepage": "https://github.com/pushkarreddyy/sqlite2pg#readme",
   "license": "MIT",
   "dependencies": {
     "commander": "^12.1.0",
