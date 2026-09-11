@@ -1,8 +1,25 @@
 # sqlite2pg ⚡
 
-> **Modern, Zero-Config SQLite to PostgreSQL & Supabase Exporter, Migrator & API Microservice.**
+<div align="center">
 
-Migrate local SQLite / LibSQL / Turso databases to PostgreSQL, Supabase, Neon, or AWS RDS without syntax errors, missing types, or memory issues.
+**Modern, Zero-Config SQLite to PostgreSQL & Supabase Exporter & Migrator.**
+
+[![CI](https://github.com/sqlite2pg/sqlite2pg/actions/workflows/ci.yml/badge.svg)](https://github.com/sqlite2pg/sqlite2pg/actions)
+[![npm version](https://img.shields.io/npm/v/sqlite2pg.svg?style=flat&color=339933)](https://www.npmjs.com/package/sqlite2pg)
+[![Node Version](https://img.shields.io/node/v/sqlite2pg.svg?style=flat)](https://nodejs.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+
+*Migrate local SQLite, LibSQL, or Turso databases directly to Supabase, Neon, AWS RDS, or Crunchy Data with zero headache, zero syntax errors, and zero native compilation.*
+
+```
+ ┌─────────────────┐       sqlite2pg       ┌──────────────────────────────┐
+ │  Local SQLite   │ ────────────────────► │  PostgreSQL / Supabase       │
+ │  (app.db)       │   Fast Zero-Config    │  (Strict Types, RLS, setval) │
+ └─────────────────┘                       └──────────────────────────────┘
+```
+
+</div>
 
 ---
 
@@ -23,7 +40,7 @@ npx sqlite2pg ./local.db -o migration.sql --target supabase
 
 ---
 
-### 🔥 Or 1-Step Direct Live Migration
+### 🔥 1-Step Direct Live Migration
 Stream and migrate directly over the wire to your database instance:
 ```bash
 npx sqlite2pg ./local.db --conn "postgres://postgres:password@db.supabase.co:5432/postgres"
@@ -31,96 +48,61 @@ npx sqlite2pg ./local.db --conn "postgres://postgres:password@db.supabase.co:543
 
 ---
 
-## 🌐 HTTP API Server & Microservice (with Rate Limiting)
+## 🛑 Why Developers Use `sqlite2pg`
 
-`sqlite2pg` includes a built-in, lightweight HTTP REST API server with a sliding window **Rate Limiter** for use as a backend service or SaaS migration microservice.
-
-### Start the Server:
-```bash
-npx sqlite2pg serve --port 3000 --rate-limit 60
-```
-
-### Rate Limiter Features:
-- **Rate Limit Window:** 60 requests/minute per client IP / API Key (configurable via `--rate-limit` and `--rate-window`).
-- **Standard HTTP Headers:**
-  - `X-RateLimit-Limit: 60`
-  - `X-RateLimit-Remaining: 59`
-  - `X-RateLimit-Reset: 1714564860`
-- **Rate Limit Exceeded:** Returns HTTP `429 Too Many Requests` with `Retry-After` header and structured JSON error.
-
-### API Endpoints:
-
-#### 1. `GET /health`
-Returns system status, memory usage, uptime, and rate limit quota:
-```bash
-curl http://localhost:3000/health
-```
-
-#### 2. `POST /api/convert`
-Convert SQLite database to PostgreSQL / Supabase SQL.
-
-**Option A: Uploading base64 payload (JSON):**
-```bash
-curl -X POST http://localhost:3000/api/convert \
-  -H "Content-Type: application/json" \
-  -d '{
-    "dbBase64": "<BASE64_ENCODED_SQLITE_DB>",
-    "options": { "target": "supabase", "schema": "public" }
-  }'
-```
-
-**Option B: Streaming raw binary SQLite database:**
-```bash
-curl -X POST http://localhost:3000/api/convert \
-  -H "Content-Type: application/octet-stream" \
-  -H "X-Target: supabase" \
-  --data-binary "@./local.db"
-```
-
-#### 3. `POST /api/introspect`
-Inspect SQLite schema, tables, row counts, foreign keys, and indexes as JSON:
-```bash
-curl -X POST http://localhost:3000/api/introspect \
-  -H "Content-Type: application/json" \
-  -d '{ "dbBase64": "<BASE64_ENCODED_SQLITE_DB>" }'
-```
+| Problem on GitHub / StackOverflow | `sqlite3 .dump` | `pgloader` | `sqlite2pg` (This Tool) |
+| :--- | :---: | :---: | :---: |
+| **`AUTOINCREMENT` Syntax Errors** | ❌ Fails (`AUTOINCREMENT` invalid in Postgres) | ⚠️ Requires config | ✅ **Auto-maps to `BIGSERIAL` / `IDENTITY`** |
+| **Foreign Key Load Order Violations** | ❌ Crashes on insert order / cycles | ⚠️ Complex setup | ✅ **Defers FKs until after data insertion** |
+| **Silent Sequence Desync (`duplicate key`)** | ❌ Next app insert fails on IDs | ⚠️ Inconsistent | ✅ **Auto-generates `SELECT setval(...)` for all tables** |
+| **Boolean `0` / `1` Type Rejections** | ❌ Postgres throws type mismatch | ⚠️ Inconsistent | ✅ **Normalizes `0/1` to `TRUE/FALSE`** |
+| **Timestamp / Unix Epoch Formatting** | ❌ Raw strings fail date parsing | ⚠️ Rigid | ✅ **Normalizes ISO, strftime, & epochs to `TIMESTAMPTZ`** |
+| **Binary & BLOB Encoding** | ❌ `X'...'` syntax fails | ⚠️ Often corrupts | ✅ **Encodes as valid `'\x...'::bytea`** |
+| **Reserved SQL Keyword Identifiers** | ❌ Fails on `user`, `order`, `table` | ⚠️ Needs rules | ✅ **ANSI quote escaping (`"user"`, `"order"`)** |
+| **Supabase Row Level Security (RLS)** | ❌ None | ❌ None | ✅ **`--target supabase` enables RLS by default** |
+| **Apple Silicon / Docker Memory Crashes** | ⚠️ Shell dependent | ❌ Common Lisp OOMs | ✅ **Pure lightweight Node.js native engine** |
 
 ---
 
-## 🛑 What Pain Points `sqlite2pg` Solves
+## 🗺️ SQLite to PostgreSQL Type Mapping Matrix
 
-| GitHub / Developer Pain Point | Standard `sqlite3 .dump` or `pgloader` | `sqlite2pg` Solution |
+`sqlite2pg` automatically translates dynamic SQLite column affinities and sampled data into strict PostgreSQL data types:
+
+| SQLite Declaration | PostgreSQL / Supabase Target | Notes |
 | :--- | :--- | :--- |
-| **`AUTOINCREMENT` Syntax Errors** | Fails in Postgres (`AUTOINCREMENT` is invalid syntax) | Maps `INTEGER PRIMARY KEY` to `BIGSERIAL` or SQL-standard `IDENTITY`. |
-| **Foreign Key Load Order Violations** | Fails on circular/alphabetical table inserts | Defers all `FOREIGN KEY` constraints until **after** all data is loaded. |
-| **Silent Sequence Desync Bug** | Subsequent app `INSERT`s throw duplicate key error on IDs | Automatically generates `SELECT setval(...)` for every table sequence. |
-| **Boolean `0` / `1` Type Errors** | Fails with `ERROR: column is of type boolean but expression is integer` | Automatically normalizes `0/1`, `'0'/'1'`, `'true'/'false'` to `TRUE`/`FALSE`. |
-| **Timestamp Incompatibilities** | Fails on SQLite strftime / unix timestamps | Normalizes ISO strings, `YYYY-MM-DD HH:MM:SS`, and epoch integers to `TIMESTAMPTZ`. |
-| **Binary & BLOB Encoding** | SQLite `X'...'` format fails in Postgres | Formats binary data as valid `'\x...'::bytea` hex literals. |
-| **Reserved SQL Keywords** | Fails on tables/columns named `user`, `order`, `group`, `select`, `limit` | Automatically escapes identifiers with Postgres double quotes (`"user"`). |
-| **Supabase RLS & Extensions** | Manual configuration required after migration | `--target supabase` automatically configures Row Level Security (RLS) & UUID extensions. |
-| **Apple Silicon / Docker Memory Errors** | Common Lisp / pgloader crashes | Pure, lightweight Node.js native engine with zero native toolchain dependencies. |
+| `INTEGER PRIMARY KEY AUTOINCREMENT` | `BIGSERIAL PRIMARY KEY` | Or `BIGINT GENERATED BY DEFAULT AS IDENTITY` with `--identity` |
+| `INTEGER`, `INT`, `INT4` | `INTEGER` | Standard 32-bit integer |
+| `BIGINT`, `INT8`, `UNSIGNED BIG INT` | `BIGINT` | 64-bit integer |
+| `BOOLEAN`, `BOOL`, `TINYINT(1)` | `BOOLEAN` | Converts `0`, `1`, `'0'`, `'1'`, `'true'`, `'false'` |
+| `DATETIME`, `TIMESTAMP` | `TIMESTAMPTZ` | Converts ISO8601, `YYYY-MM-DD HH:MM:SS`, and Unix epochs |
+| `REAL`, `FLOAT`, `DOUBLE` | `DOUBLE PRECISION` | Formats `NaN`, `Infinity`, and floating points |
+| `NUMERIC(p, s)`, `DECIMAL(p, s)` | `NUMERIC(p, s)` | Arbitrary precision decimals |
+| `TEXT`, `CLOB`, `VARCHAR`, `STRING` | `TEXT` / `VARCHAR(n)` | Escapes quotes (`O'Reilly`), strips null bytes (`\0`) |
+| `BLOB`, `BINARY` | `BYTEA` | Formatted as `'\x...'::bytea` |
+| `JSON`, `JSONB` | `JSONB` | Validates JSON structure and appends `::jsonb` |
+| `UUID`, `GUID` | `UUID` | Preserves standard UUID strings |
+| `(untyped / dynamic)` | `INFERRED` or `TEXT` | Samples data rows to pick the best strict PostgreSQL type |
 
 ---
 
 ## 📦 Installation & Usage
 
-### Running via `npx` (No Install Required)
+### Method 1: Zero-Install via `npx` (Recommended)
 ```bash
-npx sqlite2pg <path-to-sqlite-db> [options]
+npx sqlite2pg ./app.db -o migration.sql
 ```
 
-### Global CLI Installation
+### Method 2: Global CLI
 ```bash
 npm install -g sqlite2pg
-sqlite2pg ./app.db -o migration.sql
+sqlite2pg ./app.db -o migration.sql --target supabase
 ```
 
-### Programmatic API (Use in Node / TypeScript Projects)
+### Method 3: Programmatic TypeScript / Node.js API
 ```typescript
 import { convert, introspect } from 'sqlite2pg';
 
-// Generate SQL string
+// Convert SQLite database file or DatabaseSync instance
 const result = convert('./local.db', {
   target: 'supabase',
   schema: 'public',
@@ -128,21 +110,18 @@ const result = convert('./local.db', {
 });
 
 console.log(result.sql);
-console.log(`Converted ${result.stats.tableCount} tables, ${result.stats.rowCount} rows in ${result.stats.durationMs}ms`);
+console.log(`Converted in ${result.stats.durationMs}ms`);
 ```
 
 ---
 
 ## 🛠️ CLI Options Reference
 
-```
-Usage: sqlite2pg [command] [options] [sqlite-db]
-
-Commands:
-  serve                        Start the HTTP REST API server with rate limiting
+```text
+Usage: sqlite2pg [options] <sqlite-db>
 
 Arguments:
-  sqlite-db                    Path to SQLite database file (.db, .sqlite, .sqlite3)
+  <sqlite-db>                  Path to SQLite database file (.db, .sqlite, .sqlite3)
 
 Options:
   -o, --output <file>          Output SQL file (writes to stdout if omitted)
@@ -166,15 +145,50 @@ Options:
 
 ---
 
+## 💡 Common Recipes
+
+### 1. Inspect Schema Without Exporting (`--dry-run`)
+```bash
+npx sqlite2pg ./app.db --dry-run
+```
+
+### 2. Migrate Specific Tables Only
+```bash
+npx sqlite2pg ./app.db --include users,posts,comments -o migration.sql
+```
+
+### 3. Generate Schema Only (No Data)
+```bash
+npx sqlite2pg ./app.db --schema-only -o schema.sql
+```
+
+### 4. Use SQL Standard `IDENTITY` Columns
+```bash
+npx sqlite2pg ./app.db --identity -o migration.sql
+```
+
+---
+
 ## 🧪 Testing
 
-Run test suite:
+Run the automated test suite:
 ```bash
 npm test
 ```
+
+Run example script:
+```bash
+npx tsx examples/demo.ts
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ---
 
 ## 📄 License
 
-MIT © 2026
+This project is licensed under the MIT License - see the [`LICENSE`](LICENSE) file for details.

@@ -14,8 +14,6 @@ export * from './transform.js';
 export * from './introspect.js';
 export * from './generator.js';
 export * from './migrate.js';
-export * from './rate-limiter.js';
-export * from './server.js';
 
 /**
  * Converts an SQLite database file or instance into PostgreSQL / Supabase migration SQL.

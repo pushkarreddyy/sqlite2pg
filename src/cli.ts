@@ -9,50 +9,15 @@ import pc from 'picocolors';
 import { convert, introspect } from './index.js';
 import { ConversionOptions, TargetDialect } from './types.js';
 import { executeLiveMigration } from './migrate.js';
-import { startApiServer } from './server.js';
 
 export async function runCli() {
   const program = new Command();
 
   program
     .name('sqlite2pg')
-    .description('Modern Zero-Config SQLite to PostgreSQL & Supabase Exporter & Migrator')
-    .version('1.0.0');
-
-  // Subcommand: serve API server
-  program
-    .command('serve')
-    .description('Start the HTTP REST API server with rate limiting')
-    .option('-p, --port <port>', 'Server port', '3000')
-    .option('-H, --host <host>', 'Server host', '0.0.0.0')
-    .option('-r, --rate-limit <max>', 'Max requests per minute per client', '60')
-    .option('-k, --api-key <key>', 'Optional API key required in Authorization / X-API-Key header')
-    .action((opts) => {
-      const port = parseInt(opts.port, 10) || 3000;
-      const rateLimit = parseInt(opts.rateLimit, 10) || 60;
-      console.log(pc.cyan(`\n⚡ Starting sqlite2pg HTTP API Server on port ${pc.bold(port)}...`));
-      console.log(pc.dim(`Rate Limiter: ${rateLimit} requests / minute per client IP / API Key`));
-      if (opts.apiKey) {
-        console.log(pc.yellow(`Auth: API key protection enabled`));
-      }
-      startApiServer({
-        port,
-        host: opts.host,
-        rateLimit,
-        apiKey: opts.apiKey,
-        verbose: true,
-      });
-      console.log(pc.green(`✔ Server listening on http://${opts.host}:${port}\n`));
-      console.log(pc.dim(`Endpoints:`));
-      console.log(`  GET  /health          - Health check and rate limit status`);
-      console.log(`  POST /api/convert     - Convert SQLite database to PostgreSQL / Supabase SQL`);
-      console.log(`  POST /api/introspect  - Introspect SQLite schema structure`);
-      console.log(`  POST /api/migrate     - Live migration to database\n`);
-    });
-
-  // Default migration command
-  program
-    .argument('[sqlite-db]', 'Path to SQLite database file (.db, .sqlite, .sqlite3)')
+    .description('Modern Zero-Config SQLite to PostgreSQL & Supabase Exporter')
+    .version('1.0.0')
+    .argument('<sqlite-db>', 'Path to SQLite database file (.db, .sqlite, .sqlite3)')
     .option('-o, --output <file>', 'Output SQL file (writes to stdout if omitted)')
     .option('-t, --target <dialect>', 'Target dialect: "postgres" or "supabase"', 'postgres')
     .option('-s, --schema <name>', 'PostgreSQL schema name', 'public')
