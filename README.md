@@ -4,7 +4,7 @@
 
 **Zero-config SQLite to PostgreSQL & Supabase Exporter and Migrator.**
 
-[![CI](https://github.com/pushkarreddyy/sqlite2pg/actions/workflows/ci.yml/badge.svg)](https://github.com/pushkarreddyy/sqlite2pg/actions)
+[![CI](https://github.com/pushkarreddyy/sqlite2pg/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pushkarreddyy/sqlite2pg/actions)
 [![Node Version](https://img.shields.io/badge/node-%3E%3D22.5.0-339933.svg)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg)](https://www.typescriptlang.org)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests)
